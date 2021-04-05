@@ -2,7 +2,7 @@
 import torch.nn as nn
 #add imports as necessary
 
-class ResNet:
+class ResNet(nn.Module):
 
     def __init__(self, block, layers, num_classes=1000):
         super(ResNet, self).__init__()
@@ -28,17 +28,22 @@ class ResNet:
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
+
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
+
+        print(x.shape)
         x = self.avgpool(x)
+        print(x.shape)
         # may need flattening?
+        
         x = self.fc(x)
         x = self.softMax(x)
         return x
 
     def new_block(self, in_planes, out_planes, stride):
-        layers = [nn.Conv2d(in_planes, out_planes, (3,3), stride), nn.BatchNorm2d(out_planes), nn.ReLu(), nn.Conv2d(out_planes, out_planes, (3,3), stride)), nn.BatchNorm2d(planes), nn.ReLU()]
+        layers = [nn.Conv2d(in_planes, out_planes, (3,3), stride, padding=1), nn.BatchNorm2d(out_planes), nn.ReLU(), nn.Conv2d(out_planes, out_planes, (3,3), stride, padding=1), nn.BatchNorm2d(out_planes), nn.ReLU()]
         #TODO: make a convolution with the above params
         return nn.Sequential(*layers)

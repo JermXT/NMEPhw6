@@ -39,7 +39,6 @@ class CIFAR(Dataset):
         """
         # Get image name from the pandas df
         single_image_path = self.image_list[index]
-
         
         # Open image
         image = Image.open(single_image_path)
@@ -49,17 +48,15 @@ class CIFAR(Dataset):
         
         # Do some operations on image
         
-        image_0 = rotate_img(image_np, 0)
-        
-        image_90 = rotate_img(image_np, 90)
-        
-        image_180 = rotate_img(image_np, 180)
-        
-        image_270 = rotate_img(image_np, 270)
+        image_0 = rotate_img(image_np, 0).reshape(3,32,32)
+        image_90 = rotate_img(image_np, 90).reshape(3,32,32)
+        image_180 = rotate_img(image_np, 180).reshape(3,32,32)
+        image_270 = rotate_img(image_np, 270).reshape(3,32,32)
         
         # print(image_270.shape)
         
         image_stack = np.stack((image_0, image_90, image_180, image_270))
+        print(image_stack.shape)
         
         # print(image_stack.shape)
         
@@ -72,11 +69,30 @@ class CIFAR(Dataset):
         # print(label_stack.shape)
         
         # Convert numpy to a tensor
-        image_tensor = torch.from_numpy(image_np).float()
+        image_tensor = torch.from_numpy(image_stack).float()
         
         label_tensor = torch.from_numpy(label_stack).float()
         
+        # print(image_tensor.shape)
+        # print(label_tensor.shape)
         return (image_tensor, label_tensor)
 
     def __len__(self):
         return self.data_len
+
+
+
+"""
+Takes in an image and a rotation. Returns the the image with the rotation applied.
+"""
+def rotate_img(img, rot):
+    if rot == 0: # 0 degrees rotation
+        return img
+    elif rot == 90: # 90 degrees rotation
+        return np.flipud(np.transpose(img, (1,0,2)))
+    elif rot == 180: # 90 degrees rotation
+        return np.fliplr(np.flipud(img))
+    elif rot == 270: # 270 degrees rotation / or -90
+        return np.transpose(np.flipud(img), (1,0,2))
+    else:
+        raise ValueError('rotation should be 0, 90, 180, or 270 degrees')
