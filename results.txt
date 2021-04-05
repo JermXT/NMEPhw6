@@ -1,23 +1,29 @@
 Implementation details:
-We wrote some functions in the jupyter notebook data.ipynb to unpickle the cifar data into the image and validation directories.
-From there the CIFAR class takes the data and loads it.
-Ok our code is pretty jank but it works rly well
-In order to do batches we take the train and validation dataloaders, which have 45000 and 5000 batches of 4 images(because each __getitem__ call creates a stack of four rotations from one image, creating one "batch")
-Then we concatenate 32 of these batches creating a new batch size of 32*4 = 128.
 
-For rotnet, we took the default resnet18, but instead of having 1000 classes we changed the last fc layer to 4 to classify each rotation.
+You can find a screenshot of our training results on the README. Jeremey and his cool af GPU was able to run through all of the epochs and we ended up getting 0.99014502 accuracy. Which is REALLY good. We are super happy about that.
 
-For the training portion, we used CrossEntropyLoss, Adam, and intended to run it overnight for 100 epochs(but it got stuck at epoch 23)
+Ok, so this is the process that we went through for this mini-project.
+
+First, we Downloaded the CIFAR-10 Dataset through our code in data.ipynb. Inside data.ipynb, the section named "Save All Images" is where we basically unpickle all of the batches from the download, stacked the Red, Green, Blue grayscale and got all of the images. We stored all of our images in the images/ directory and the validation/ directory. images/ direction is our training data and validation/ directory is our validation data.
+
+After the "Save all Images" section, it's were we basically messed around with our dataloader to experiment with how we want to design it. So after we got a working version, we transferred the code into data.py. For our data loader, the __init__ method basically gets a list of all of the file paths in the DATA_DIR. The ___getitem__ method will get the image at the specified filepath and generate 4 images with the different transformations (0,90,180,270). We then stack all of these images together and then convert that into our image_tensor. We also create a tensor to store all of our labels. So our __getitems__ basically returns ((4,32,32,3) tensor, (4,) tensor). The transformations use the method rotate_img(img, rot), which is taken from the paper's github.
+
+Inside main, you will see how we used some janky code to get the correct number of batches. In order to do the correct number of batches we take the train and validation dataloaders, which have 45000 and 5000 batches of 4 images (because each __getitem__ call creates a stack of four rotations from one image, creating one "batch") Then we concatenate 32 of these batches creating a new batch size of 32*4 = 128. Check out our main.py to see how we are doing the batches and epoches. t
+
+For rotnet.py, we took the default resnet18, but instead of having 1000 classes we changed the last fc layer to 4 to classify each rotation. 
+
+For the training portion, we used CrossEntropyLoss, Adam, and intended to run it overnight for 100 epochs(but it got stuck at epoch 23). However, this still gave us a
 
 The training and validation code r pretty standard, adding cuda() to everything
 "with torch.no_grad():" was needed otherwise during validation the gpu would run out of memory instantly
 
 btw, we didn't use any resnet params for the init and none of the argparse stuff(oops)
-(we hardcoded a lot of things)
+(we hardcoded a lot of things) SORRY. Hey. If it works it works. :D 
 
 Training results:
 I ran the code overnight on my gpu, but it got stuck at epoch 23 with no error messages. 
 The validation loss decreased from 103 to 4, and the accuracy increased from 73% to 99% in the span of 23 epochs.
+
 We used the first 45000 images as the training set and the last 5000 images as the validation set.
 (180000 and 20000 respectively when accounting for 4 rotations per image)
 The training loss, test loss, and accuracy at each epoch are listed in rotnetresults.png
