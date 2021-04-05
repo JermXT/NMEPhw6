@@ -12,7 +12,7 @@ Inside main, you will see how we used some janky code to get the correct number 
 
 For rotnet.py, we took the default resnet18, but instead of having 1000 classes we changed the last fc layer to 4 to classify each rotation. 
 
-For the training portion, we used CrossEntropyLoss, Adam, and intended to run it overnight for 100 epochs(but it got stuck at epoch 23). However, this still gave us a
+For the training portion, we used CrossEntropyLoss, Adam, and intended to run it overnight for 100 epochs(but it got stuck at epoch 23). However, this still gave us a 99% accuracy. (See the README.md for our training results.)
 
 The training and validation code r pretty standard, adding cuda() to everything
 "with torch.no_grad():" was needed otherwise during validation the gpu would run out of memory instantly
