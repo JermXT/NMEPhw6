@@ -1,0 +1,23 @@
+Implementation details:
+We wrote some functions in the jupyter notebook data.ipynb to unpickle the cifar data into the image and validation directories.
+From there the CIFAR class takes the data and loads it.
+Ok our code is pretty jank but it works rly well
+In order to do batches we take the train and validation dataloaders, which have 45000 and 5000 batches of 4 images(because each __getitem__ call creates a stack of four rotations from one image, creating one "batch")
+Then we concatenate 32 of these batches creating a new batch size of 32*4 = 128.
+
+For rotnet, we took the default resnet18, but instead of having 1000 classes we changed the last fc layer to 4 to classify each rotation.
+
+For the training portion, we used CrossEntropyLoss, Adam, and intended to run it overnight for 100 epochs(but it got stuck at epoch 23)
+
+The training and validation code r pretty standard, adding cuda() to everything
+"with torch.no_grad():" was needed otherwise during validation the gpu would run out of memory instantly
+
+btw, we didn't use any resnet params for the init and none of the argparse stuff(oops)
+(we hardcoded a lot of things)
+
+Training results:
+I ran the code overnight on my gpu, but it got stuck at epoch 23 with no error messages. 
+The validation loss decreased from 103 to 4, and the accuracy increased from 73% to 99% in the span of 23 epochs.
+We used the first 45000 images as the training set and the last 5000 images as the validation set.
+(180000 and 20000 respectively when accounting for 4 rotations per image)
+The training loss, test loss, and accuracy at each epoch are listed in rotnetresults.png
