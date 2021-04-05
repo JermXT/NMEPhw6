@@ -18,8 +18,8 @@ class ResNet:
         self.layer3 = self.new_block(128,256,2)
         self.layer4 = self.new_block(256,512,2)
         self.avgpool = nn.AvgPool2d((7,7))
-        self.fc = nn.Linear(512, 1000)
-
+        self.fc = nn.Linear(512, 4)
+        self.softMax = nn.Softmax()
 
     def forward(self, x):
         #TODO: implement the forward function for resnet,
@@ -35,6 +35,7 @@ class ResNet:
         x = self.avgpool(x)
         # may need flattening?
         x = self.fc(x)
+        x = self.softMax(x)
         return x
 
     def new_block(self, in_planes, out_planes, stride):
