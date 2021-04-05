@@ -8,10 +8,16 @@ from torch.utils.data.dataset import Dataset  # For custom datasets
 from resnet import ResNet
 from data import CIFAR
 
+import numpy as np
+
 import time
 import shutil
 import yaml
 import argparse
+
+from torchsummary import summary
+
+
 
 parser = argparse.ArgumentParser(
     description='Configuration details for training/testing rotation net')
@@ -28,11 +34,12 @@ config = yaml.load(open(args.config, 'r'), Loader=yaml.FullLoader)
 
 def train(train_loader, model, criterion, optimizer, epoch):
 	total_loss = 0
+	print("hi")
 	for i, (input, target) in enumerate(train_loader):
 		#print(input.shape)
 		#print(target.shape)
 		optimizer.zero_grad()
-
+		print(input.shape)
 		predicted_label = model.forward(input)
 
 		loss = criterion(predicted_label, target)
@@ -57,6 +64,9 @@ def save_checkpoint(state, best_one, filename='rotationnetcheckpoint.pth.tar', f
 		shutil.copyfile(filename, filename2)
 
 def main():
+	# print(summary(model, (3, 32, 32)))
+	print("HEYO")
+
 	n_epochs = config["num_epochs"]
 	model = ResNet(0,0,0) #make the model with your paramters
     
@@ -66,6 +76,35 @@ def main():
 
 	train_dataset = './images/' + '*'#how will you get your dataset
 	train_loader = CIFAR(train_dataset) # how will you use pytorch's function to build a dataloader
+	
+	# next --> (4x3x32x32, 4)
+	"""
+	image_stack = []
+	label_stack = []
+	for i in range(32):
+		temp = next(iter(data_loader))
+		image_stack.append(temp[0])
+		label_stack.append(temp[1])
+	img = np.concatenate(image_stack, axis=0)
+	lb = np.concatenate(label_stack, axis=0)
+	batch_1 (img, lb)
+	"""
+	print("hi")
+	all_batches = []
+	d_iter = iter(train_loader)
+	for i in range(40):
+		image_stack = []
+		label_stack = []
+		for i in range(32):
+			temp = next(d_iter)
+			image_stack.append(temp[0])
+			label_stack.append(temp[1])
+		img = torch.cat(image_stack, axis=0)
+		lb = torch.cat(label_stack, axis=0)
+		all_batches.append((img, lb))
+
+	print("concat done")
+
 
 	val_dataset = './validation/' + '*' #how will you get your dataset
 	val_loader = CIFAR(val_dataset) # how will you use pytorch's function to build a dataloader
@@ -75,7 +114,7 @@ def main():
 	print(len(train_loader))
 
 	for epoch in range(n_epochs):
-		total_loss = train(train_loader, model, criterion, optimizer, epoch)
+		total_loss = train(all_batches, model, criterion, optimizer, epoch)
 		print("Epoch {0}: {1}".format(epoch, total_loss))
 		validation_loss = validate(val_loader, model, criterion)
 		print("\tTest Accuracy {0}".format(validation_loss))

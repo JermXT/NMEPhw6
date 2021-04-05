@@ -56,22 +56,23 @@ class CIFAR(Dataset):
         # print(image_270.shape)
         
         image_stack = np.stack((image_0, image_90, image_180, image_270))
-        print(image_stack.shape)
+        # print(image_stack.shape)
         
         # print(image_stack.shape)
         
-        # One hot encoding for the labels
-        label_stack = np.stack((np.array([1,0,0,0]),
-                                np.array([0,1,0,0]),
-                                np.array([0,0,1,0]),
-                                np.array([0,0,0,1])))
+        # One hot encoding for the label
+        label_stack = np.stack((0,1,2,3))
+        # label_stack = np.stack((np.array([1,0,0,0]), np.array([0,1,0,0]), np.array([0,0,1,0]), np.array([0,0,0,1])))
         
         # print(label_stack.shape)
+        
         
         # Convert numpy to a tensor
         image_tensor = torch.from_numpy(image_stack).float()
         
         label_tensor = torch.from_numpy(label_stack).float()
+        label_tensor = label_tensor.type(torch.LongTensor)
+
         
         # print(image_tensor.shape)
         # print(label_tensor.shape)
