@@ -1,4 +1,9 @@
 # Week 5 Mini-Project aka 2 week HW!
+
+## Rotnet results
+![plot](./rotnetresults.png)
+
+
 Please read through all the documentation before you get started.
 This is a **MANDATORY** partner project. Regardless, you and your assigned partners will each submit one assignment.
 
