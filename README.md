@@ -1,34 +1,18 @@
-# Week 5 Mini-Project aka 2 week HW!
-
-## Rotnet results
-![Screenshot](rotnetresults.PNG)
-
-
-Please read through all the documentation before you get started.
-This is a **MANDATORY** partner project. Regardless, you and your assigned partners will each submit one assignment.
-
 ## Self Supervised Learning for Image Classification
 
-In this Mini-Project you will be implementing a paper that uses geometric transformations to extract features of an image without requiring these images to be labeled. This project will be for the most part from scratch; however, feel free to use the documentation below or reach out if you are confused. Although there is some skeleton code, feel free to delete all of it and implement this paper in whichever way makes the most sense to you.
+In this Project we implement a paper (https://arxiv.org/pdf/1803.07728.pdf) that uses geometric transformations to extract features of an image without requiring these images to be labeled.
 
-You have **two weeks** to complete the project and there will be regular checkpoints as outlined below. Good luck!
-
-### Project Objectives
-In this project you will learn the following valuable skills as discussed in lecture:
+### Project Learning Objectives
+In this project we will learn :
 1. Using pytorch Dataset/DataLoader, load and preprocess data
 2. Training a model from scratch and frequently checkpointing models
 3. Implement good software engineering skills including the use of virtual environments, git (for partner work), and OOP
 
-### Project Checkpoints
-We will be regularly checking in on the following checkpoints so stay on top of your work!
-1. Read this paper by 3/23. https://arxiv.org/pdf/1803.07728.pdf
-2. Load and generate the rotation dataset. Start learning how to implement pytorch DataLoaders. Also make sure that you have your AWS account setup. Date: 3/26
-3. Complete the model architecture (resnet18) and training loop. Date: 3/30
-4. Debug model and complete training and show results. Date: 4/2
-5. Completed project with results is due on Monday, April 5th at 11:59pm SHARP. NO EXCEPTIONS ON THIS DEADLINE.
 
-### Results
-Please submit your code to the HW 6 assignment, along with a results.txt file describing your implementation in detail. Please include training results (how many epochs, how low did your loss get, what was your accuracy on predicting rotations, etc.) in this results.txt file as well.
+## Rotnet results
+See results.txt
+![Screenshot](rotnetresults.PNG)
+
 
 ### Setting up your environment
 `pip3 install vitrualenv` (if not already installed)
@@ -40,8 +24,6 @@ To deactivate the environment you are in run:
 `source deactivate`
 
 ### Code Structure
-You will be writing code in the data.py, resnet.py, and rotnet.py.
-
 `main.py` will contain the training loop and validation for the model. You can start here to get a general idea of the flow of the code base.
 `resnet.py` will contain your implementation of the resnet model (you can find the architecture online or in the paper).
 `data.py` will contain all your data loading functions.
